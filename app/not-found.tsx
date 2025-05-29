@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { APP_NAME } from "@/lib/constants";
 import Image from "next/image";
 
-const Notfound = () => {
+export default function Notfound() {
   return (
     <div>
       <div className="flex flex-col items-center justify-center h-screen">
@@ -29,6 +29,4 @@ const Notfound = () => {
       </div>
     </div>
   );
-};
-
-export default Notfound;
+}
