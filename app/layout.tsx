@@ -6,6 +6,7 @@ import {
   APP_NAME,
   SERVER_URL,
 } from "./../lib/constants/index";
+import { ThemeProvider } from "next-themes";
 
 const roboto = Roboto({ subsets: ["latin"] });
 
@@ -21,8 +22,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${roboto.className} antialiased`}>{children}</body>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${roboto.className} antialiased`}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

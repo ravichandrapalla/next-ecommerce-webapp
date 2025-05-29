@@ -4,6 +4,8 @@ import { ShoppingCart, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import ModeToggle from "./mode-toggle";
+import Menu from "./menu";
 
 const Header = () => {
   return (
@@ -23,18 +25,7 @@ const Header = () => {
             </span>
           </Link>
         </div>
-        <div className="space-x-2">
-          <Button asChild variant="ghost">
-            <Link href="/cart">
-              <ShoppingCart /> Cart
-            </Link>
-          </Button>
-          <Button asChild variant="ghost">
-            <Link href="/sign-in">
-              <User /> Sign-in
-            </Link>
-          </Button>
-        </div>
+        <Menu />
       </div>
     </header>
   );
