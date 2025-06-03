@@ -18,6 +18,7 @@ export const metadata: Metadata = {
 
 const SignInPage = async () => {
   const session = await auth();
+  console.log("current session is -->", session);
   if (session) {
     console.log("session creaded", session);
     return redirect("/");

@@ -22,13 +22,14 @@ export const config = {
         password: { type: "password" },
       },
       async authorize(credentials) {
-        if (credentials === null) return null;
+        if (credentials == null) return null;
+        console.log("credentials is not null");
 
         //find user in db
         const user = await prisma.user.findFirst({
           where: { email: credentials.email as string },
         });
-
+        console.log("found a user");
         //if user exists password matces
         if (user && user.password) {
           const isMatch = compareSync(
@@ -36,7 +37,7 @@ export const config = {
             user.password
           );
           //if match
-
+          console.log("now is the user a match --> ", isMatch);
           if (isMatch) {
             return {
               id: user.id,
@@ -46,12 +47,13 @@ export const config = {
             };
           }
         }
+        console.log("nope returning null");
         return null;
       },
     }),
   ],
   callbacks: {
-    async session({ session, user, trigger, token }: any) {
+    async session({ session, token, user, trigger }: any) {
       session.user.id = token.sub;
 
       //if there is an update

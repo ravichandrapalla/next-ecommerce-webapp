@@ -9,12 +9,14 @@ export async function signInWithCredentials(
   prevState: unknown,
   formData: FormData
 ) {
+  console.log("formData  ====> ", formData);
   try {
     const user = signInFormSchema.parse({
       email: formData.get("email"),
       password: formData.get("password"),
     });
     await signIn("credentials", user);
+    console.log("signed in successfullly ----->");
     return { success: true, message: "Signed in successfully" };
   } catch (error) {
     if (isRedirectError(error)) {
