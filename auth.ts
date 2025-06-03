@@ -80,7 +80,7 @@ export const config = {
       // Initial sign in - add user data to token
       if (user) {
         console.log("👤 Adding user to token:", user.email);
-        token.role = user.role;
+        // token.role = user.role;
         token.id = user.id;
       }
 
@@ -99,7 +99,7 @@ export const config = {
 
       if (token && session.user) {
         session.user.id = token.sub!;
-        session.user.role = token.role as string;
+        // session.user.role = token.role as string;
       }
 
       console.log("📋 Session created for:", session.user?.email);
