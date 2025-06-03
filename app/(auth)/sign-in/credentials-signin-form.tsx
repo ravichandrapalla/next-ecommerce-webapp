@@ -8,20 +8,34 @@ import { signInDefaultValues } from "@/lib/constants";
 import Link from "next/link";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const CredentialsSigninForm = () => {
+  const router = useRouter();
   const [data, action] = useActionState(signInWithCredentials, {
     success: false,
     message: "",
   });
+
+  // Redirect on successful sign-in
+  useEffect(() => {
+    if (data?.success) {
+      console.log("🎉 Sign-in successful, redirecting...");
+      router.push("/"); // or wherever you want to redirect
+      router.refresh(); // Refresh to update session state
+    }
+  }, [data?.success, router]);
+
   const SignInButton = () => {
     const { pending } = useFormStatus();
     return (
       <Button disabled={pending} className="w-full">
-        {pending ? "Signing In.." : "Sign In"}
+        {pending ? "Signing In..." : "Sign In"}
       </Button>
     );
   };
+
   return (
     <form action={action}>
       <div className="space-y-6">
@@ -47,7 +61,7 @@ const CredentialsSigninForm = () => {
             name="password"
             type="password"
             required
-            autoComplete="password"
+            autoComplete="current-password"
             defaultValue={signInDefaultValues.password}
           />
         </div>
@@ -56,6 +70,11 @@ const CredentialsSigninForm = () => {
         </div>
         {data && !data.success && (
           <div className="text-center text-destructive">{data.message}</div>
+        )}
+        {data && data.success && (
+          <div className="text-center text-green-600">
+            {data.message} - Redirecting...
+          </div>
         )}
         <div className="text-sm text-center text-muted-foreground">
           Don&apos;t have an account?{" "}
