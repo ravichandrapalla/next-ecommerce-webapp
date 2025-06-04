@@ -9,8 +9,11 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const CredentialsSigninForm = () => {
+  const router = useRouter();
   const [data, action] = useActionState(signInWithCredentials, {
     success: false,
     message: "",
@@ -22,10 +25,11 @@ const CredentialsSigninForm = () => {
     const { pending } = useFormStatus();
     return (
       <Button disabled={pending} className="w-full">
-        {pending ? "Signing In.." : "Sign In"}
+        {pending ? "Signing In..." : "Sign In"}
       </Button>
     );
   };
+
   return (
     <form action={action}>
       <input type="hidden" name="callbackUrl" value={callbackUrl} />
@@ -52,7 +56,7 @@ const CredentialsSigninForm = () => {
             name="password"
             type="password"
             required
-            autoComplete="password"
+            autoComplete="current-password"
             defaultValue={signInDefaultValues.password}
           />
         </div>
@@ -61,6 +65,11 @@ const CredentialsSigninForm = () => {
         </div>
         {data && !data.success && (
           <div className="text-center text-destructive">{data.message}</div>
+        )}
+        {data && data.success && (
+          <div className="text-center text-green-600">
+            {data.message} - Redirecting...
+          </div>
         )}
         <div className="text-sm text-center text-muted-foreground">
           Don&apos;t have an account?{" "}
