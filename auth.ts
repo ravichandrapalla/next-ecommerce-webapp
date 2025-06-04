@@ -94,12 +94,15 @@ export const config = {
     },
 
     // Make session callback async
-    async session({ session, token }) {
+    async session({ session, token, trigger, user }) {
       console.log("📋 Session Callback - token sub:", token.sub);
 
       if (token && session.user) {
         session.user.id = token.sub!;
         // session.user.role = token.role as string;
+      }
+      if (trigger === "update") {
+        session.user.name = user.name;
       }
 
       console.log("📋 Session created for:", session.user?.email);

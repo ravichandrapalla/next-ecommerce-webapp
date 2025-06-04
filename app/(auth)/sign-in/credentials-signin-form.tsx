@@ -19,13 +19,13 @@ const CredentialsSigninForm = () => {
   });
 
   // Redirect on successful sign-in
-  useEffect(() => {
-    if (data?.success) {
-      console.log("🎉 Sign-in successful, redirecting...");
-      router.push("/"); // or wherever you want to redirect
-      router.refresh(); // Refresh to update session state
-    }
-  }, [data?.success, router]);
+  // useEffect(() => {
+  //   if (data?.success) {
+  //     console.log("🎉 Sign-in successful, redirecting...");
+  //     router.push("/"); // or wherever you want to redirect
+  //     router.refresh(); // Refresh to update session state
+  //   }
+  // }, [data?.success, router]);
 
   const SignInButton = () => {
     const { pending } = useFormStatus();
