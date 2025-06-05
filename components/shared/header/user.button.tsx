@@ -54,7 +54,9 @@ const UserButton = async () => {
               <Button
                 className="w-full py-4 px-2 h-4 justify-start"
                 variant="ghost"
-              ></Button>
+              >
+                Sign out
+              </Button>
             </form>
           </DropdownMenuItem>
         </DropdownMenuContent>
