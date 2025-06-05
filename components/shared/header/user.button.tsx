@@ -7,7 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "@radix-ui/react-dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 import { User } from "lucide-react";
 import Link from "next/link";
 import React from "react";
