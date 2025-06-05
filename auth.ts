@@ -74,38 +74,49 @@ export const config = {
   ],
   callbacks: {
     // Make JWT callback async
-    async jwt({ token, user, trigger, session }) {
+    async jwt({ token, user, trigger, session }: any) {
       console.log("🎫 JWT Callback - trigger:", trigger);
 
       // Initial sign in - add user data to token
       if (user) {
         console.log("👤 Adding user to token:", user.email);
         // token.role = user.role;
-        token.id = user.id;
+        // token.id = user.id;
+        // here we make namein email as user name if no name is provided
+        token.role = user.role;
+        if (user.name === "NO_NAME") {
+          token.name = user.email!.split("@")[0];
+          //syncing the database with newly created name
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { name: token.name },
+          });
+        }
       }
 
       // Handle session updates
-      if (trigger === "update" && session) {
-        token.name = session.user.name;
-      }
+      // if (trigger === "update" && session) {
+      //   token.name = session.user.name;
+      // }
 
       console.log("🎫 JWT token created/updated for:", token.email);
       return token;
     },
 
     // Make session callback async
-    async session({ session, token, trigger, user }) {
+    async session({ session, token, trigger, user }: any) {
       console.log("📋 Session Callback - token sub:", token.sub);
 
       if (token && session.user) {
         session.user.id = token.sub!;
-        // session.user.role = token.role as string;
+        session.user.role = token.role;
+        session.user.name = token.name;
       }
       if (trigger === "update") {
         session.user.name = user.name;
       }
 
-      console.log("📋 Session created for:", session.user?.email);
+      console.log("📋 Session created for:", token);
       return session;
     },
   },
