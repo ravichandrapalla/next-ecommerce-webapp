@@ -7,6 +7,7 @@ import {
   SERVER_URL,
 } from "./../lib/constants/index";
 import { ThemeProvider } from "next-themes";
+import { Toaster } from "@/components/ui/sonner";
 
 const roboto = Roboto({ subsets: ["latin"] });
 
@@ -31,6 +32,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

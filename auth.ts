@@ -3,6 +3,7 @@ import { prisma } from "@/db/prisma";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { compare } from "bcrypt-ts-edge";
 import type { NextAuthConfig } from "next-auth";
+import { NextResponse } from "next/server";
 
 export const config = {
   pages: {
@@ -118,6 +119,26 @@ export const config = {
 
       console.log("📋 Session created for:", token);
       return session;
+    },
+    authorized({ request, auth }: any) {
+      const sessionCartIdCookie = request.cookies.get("sessionCartId");
+
+      if (!sessionCartIdCookie) {
+        const sessionCartId = crypto.randomUUID();
+
+        const newRequestHeaders = new Headers(request.headers);
+        const response = NextResponse.next({
+          request: {
+            headers: newRequestHeaders,
+          },
+        });
+
+        response.cookies.set("sessionCartId", sessionCartId);
+
+        return response; // ✅ Return the modified response
+      }
+
+      return true; // ✅ Allow access normally
     },
   },
   debug: process.env.NODE_ENV === "development",
