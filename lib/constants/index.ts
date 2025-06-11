@@ -19,3 +19,10 @@ export const signUpDefaultValues = {
   password: "",
   confirmPassword: "",
 };
+export const shippingAddressDefaultValues = {
+  fullName: "John doe",
+  streetAddress: "123 Main street",
+  city: "mumbai",
+  postalCode: "125635",
+  country: "IND",
+};
