@@ -144,6 +144,24 @@ export const config = {
       return session;
     },
     authorized({ request, auth }: any) {
+      //array of path patterns to protect using test method
+      const protectedPaths = [
+        /\/shipping-address/,
+        /\/payment-method/,
+        /\/place-order/,
+        /\/profile/,
+        /\/user\/(.*)/,
+        /\/order\/(.*)/,
+        /\/admin/,
+      ];
+      //get path name from req URL object
+      const { pathname } = request.nextUrl;
+
+      //check if user is not authenticated and accessing a protected route
+      if (!auth && protectedPaths.some((p) => p.test(pathname))) {
+        return false;
+      }
+
       const sessionCartIdCookie = request.cookies.get("sessionCartId");
 
       if (!sessionCartIdCookie) {

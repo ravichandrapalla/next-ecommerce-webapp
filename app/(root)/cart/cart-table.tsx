@@ -12,10 +12,8 @@ import {
 import { Cart } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
-
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
-import { type } from "./../../../types/index";
 import { addItemToCart, removeItemFromCart } from "@/lib/actions/cart.actions";
 import { toast } from "sonner";
 import { ArrowRight, Loader, Minus, Plus } from "lucide-react";
