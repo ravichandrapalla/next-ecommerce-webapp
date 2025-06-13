@@ -30,6 +30,7 @@ const ShippingAddressForm = ({ address }: { address: ShippingAddress }) => {
     defaultValues: address || shippingAddressDefaultValues,
   });
   const [ispending, startTransition] = useTransition();
+
   const onSubmit: SubmitHandler<z.infer<typeof shippingAddressSchema>> = async (
     values
   ) => {
@@ -174,7 +175,7 @@ const ShippingAddressForm = ({ address }: { address: ShippingAddress }) => {
             <div className="flex gap-2">
               <Button type="submit" disabled={ispending}>
                 {ispending ? (
-                  <Loader className="w-4 h-4" />
+                  <Loader className="w-4 h-4 animate-spin" />
                 ) : (
                   <ArrowRight className="w-4 h-4" />
                 )}{" "}
