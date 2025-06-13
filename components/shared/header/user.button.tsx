@@ -16,27 +16,19 @@ const UserButton = async () => {
   const session = await auth();
 
   if (!session) {
-    return (
-      <Button asChild>
-        <Link href="/sign-in">
-          <User /> Sign-in
-        </Link>
-      </Button>
-    );
+    return null;
   }
   const firstInitial = session.user?.name?.charAt(0).toUpperCase() ?? "";
   return (
     <div className="flex gap-2 items-center ">
       <DropdownMenu>
-        <DropdownMenuTrigger>
-          <div className="flex items-center">
-            <Button
-              variant="ghost"
-              className="relative w-8 h-8 rounded-full ml-2 flex items-center bg-gray-200 cursor-pointer"
-            >
-              {firstInitial}
-            </Button>
-          </div>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="ghost"
+            className="relative w-8 h-8 rounded-full ml-2 flex items-center bg-gray-200 cursor-pointer"
+          >
+            {firstInitial}
+          </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56" align="end" forceMount>
           <DropdownMenuLabel className="font-normal">
@@ -49,14 +41,14 @@ const UserButton = async () => {
               </div>
             </div>
           </DropdownMenuLabel>
-          <DropdownMenuItem className="p-0 mb-1">
+          <DropdownMenuItem className="p-0 mb-1" asChild>
             <form action={signOutUser} className="w-full">
-              <Button
-                className="w-full py-4 px-2 h-4 justify-start cursor-pointer"
-                variant="ghost"
+              <button
+                type="submit"
+                className="w-full py-4 px-2 h-4 justify-start cursor-pointer text-left hover:bg-gray-100 flex items-center"
               >
                 Sign out
-              </Button>
+              </button>
             </form>
           </DropdownMenuItem>
         </DropdownMenuContent>
