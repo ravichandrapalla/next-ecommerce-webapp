@@ -25,7 +25,7 @@ export async function createOrder() {
       return {
         success: false,
         message: "Your cart is empty",
-        redirectTo: ".cart",
+        redirectTo: "/cart",
       };
     }
     if (!user.address) {
