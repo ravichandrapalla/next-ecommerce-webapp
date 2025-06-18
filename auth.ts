@@ -24,13 +24,7 @@ export const config = {
         password: { label: "Password", type: "password" },
       },
       authorize: async (credentials) => {
-        console.log(
-          "🔐 Starting authorization with credentials:",
-          !!credentials
-        );
-
         if (!credentials?.email || !credentials?.password) {
-          console.log("❌ Missing credentials");
           return null;
         }
 
@@ -40,10 +34,7 @@ export const config = {
             where: { email: credentials.email as string },
           });
 
-          console.log("👤 User found:", !!user);
-
           if (!user || !user.password) {
-            console.log("❌ User not found or no password");
             return null;
           }
 
@@ -53,10 +44,7 @@ export const config = {
             user.password
           );
 
-          console.log("🔑 Password match:", isMatch);
-
           if (isMatch) {
-            console.log("✅ Authorization successful for:", user.email);
             return {
               id: user.id,
               name: user.name,
@@ -65,10 +53,8 @@ export const config = {
             };
           }
 
-          console.log("❌ Password mismatch");
           return null;
         } catch (error) {
-          console.error("💥 Authorization error:", error);
           return null;
         }
       },
@@ -77,11 +63,8 @@ export const config = {
   callbacks: {
     // Make JWT callback async
     async jwt({ token, user, trigger, session }: any) {
-      console.log("🎫 JWT Callback - trigger:", trigger);
-
       // Initial sign in - add user data to token
       if (user) {
-        console.log("👤 Adding user to token:", user.email);
         token.role = user.role;
         token.id = user.id;
         // here we make namein email as user name if no name is provided
@@ -123,14 +106,11 @@ export const config = {
       //   token.name = session.user.name;
       // }
 
-      console.log("🎫 JWT token created/updated for:", token.email);
       return token;
     },
 
     // Make session callback async
     async session({ session, token, trigger, user }: any) {
-      console.log("📋 Session Callback - token sub:", token.sub);
-
       if (token && session.user) {
         session.user.id = token.sub!;
         session.user.role = token.role;
@@ -140,7 +120,6 @@ export const config = {
         session.user.name = user.name;
       }
 
-      console.log("📋 Session created for:", token);
       return session;
     },
     authorized({ request, auth }: any) {

@@ -112,8 +112,6 @@ export async function addItemToCart(data: CartItem) {
       };
     }
 
-    console.log("session and user", sessionCartId, userId);
-
     return { success: true, message: "Item added to cart" };
   } catch (error) {
     return { success: false, message: formatError(error) };

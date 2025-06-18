@@ -20,22 +20,16 @@ export async function signInWithCredentials(
   prevState: unknown,
   formData: FormData
 ) {
-  console.log("🚀 Sign-in action started");
-
   try {
     const user = signInFormSchema.parse({
       email: formData.get("email"),
       password: formData.get("password"),
     });
 
-    console.log("📧 Attempting sign-in for:", user.email);
-
     const result = await signIn("credentials", {
       email: user.email,
       password: user.password,
     });
-
-    console.log("✅ Sign-in result:", result);
 
     // If we get here without error, sign-in was successful
     return { success: true, message: "Signed in successfully" };
