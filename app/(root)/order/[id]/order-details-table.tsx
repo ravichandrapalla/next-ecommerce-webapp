@@ -27,6 +27,8 @@ import {
   // updateOrderToPaidCOD,
   // deliverOrder,
 } from "@/lib/actions/order.actions";
+import { Toaster } from "@/components/ui/sonner";
+import { toast } from "sonner";
 // import StripePayment from './stripe-payment';
 
 const OrderDetailsTable = ({
@@ -55,8 +57,6 @@ const OrderDetailsTable = ({
     deliveredAt,
   } = order;
 
-  const { toast } = useToast();
-
   const PrintLoadingState = () => {
     const [{ isPending, isRejected }] = usePayPalScriptReducer();
     let status = "";
@@ -73,10 +73,7 @@ const OrderDetailsTable = ({
     const res = await createPayPalOrder(order.id);
 
     if (!res.success) {
-      toast({
-        variant: "destructive",
-        description: res.message,
-      });
+      toast.error(res.message);
     }
 
     return res.data;
@@ -85,16 +82,16 @@ const OrderDetailsTable = ({
   const handleApprovePayPalOrder = async (data: { orderID: string }) => {
     const res = await approvePayPalOrder(order.id, data);
 
-    toast({
-      variant: res.success ? "default" : "destructive",
-      description: res.message,
-    });
+    if (res.success) {
+      toast.success(res.message);
+    } else {
+      toast.error(res.message);
+    }
   };
 
   // Button to mark order as paid
   const MarkAsPaidButton = () => {
     const [isPending, startTransition] = useTransition();
-    const { toast } = useToast();
 
     return (
       <Button
@@ -118,7 +115,6 @@ const OrderDetailsTable = ({
   // Button to mark order as delivered
   const MarkAsDeliveredButton = () => {
     const [isPending, startTransition] = useTransition();
-    const { toast } = useToast();
 
     return (
       <Button
@@ -239,8 +235,9 @@ const OrderDetailsTable = ({
               {!isPaid && paymentMethod === "PayPal" && (
                 <div>
                   <PayPalScriptProvider options={{ clientId: paypalClientId }}>
-                    <PrintLoadingState />
+                    {/* <PrintLoadingState /> */}
                     <PayPalButtons
+                      style={{ layout: "horizontal" }}
                       createOrder={handleCreatePayPalOrder}
                       onApprove={handleApprovePayPalOrder}
                     />
