@@ -102,20 +102,19 @@ export const config = {
       }
 
       // Handle session updates
-      // if (trigger === "update" && session) {
-      //   token.name = session.user.name;
-      // }
+      if (trigger === "update" && session?.user?.name) {
+        token.name = session.user.name;
+      }
 
       return token;
     },
 
-    // Make session callback async
+    // session callback
     async session({ session, token, trigger, user }: any) {
-      if (token && session.user) {
-        session.user.id = token.sub!;
-        session.user.role = token.role;
-        session.user.name = token.name;
-      }
+      session.user.id = token.sub;
+      session.user.role = token.role;
+      session.user.name = token.name;
+
       if (trigger === "update") {
         session.user.name = user.name;
       }
