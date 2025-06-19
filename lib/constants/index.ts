@@ -39,3 +39,18 @@ export const PAGE_SIZE = Number(process.env.PAGE_SIZE) || 12;
 export const USER_ROLES = process.env.USER_ROLES
   ? process.env.USER_ROLES.split(", ")
   : ["admin", "user"];
+
+export const productDefaultValues = {
+  name: "",
+  slug: "",
+  category: "",
+  images: [],
+  brand: "",
+  description: "",
+  price: "0",
+  stock: 0,
+  rating: "0",
+  numReviews: "0",
+  isFeatured: false,
+  banner: null,
+};
