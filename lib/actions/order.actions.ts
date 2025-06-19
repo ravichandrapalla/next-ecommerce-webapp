@@ -184,7 +184,7 @@ export async function approvePayPalOrder(
 }
 
 //update order to paid
-async function updateOrderToPaid({
+export async function updateOrderToPaid({
   orderId,
   paymentResult,
 }: {
@@ -229,6 +229,13 @@ async function updateOrderToPaid({
     },
   });
   if (!updatedOrder) throw new Error("Order not found to update");
+  //  sendPurchaseReceipt({
+  //   order: {
+  //     ...updatedOrder,
+  //     shippingAddress: updatedOrder.shippingAddress as ShippingAddress,
+  //     paymentResult: updatedOrder.paymentResult as PaymentResult,
+  //   },
+  // });
 }
 
 // get user orders
