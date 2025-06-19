@@ -6,12 +6,17 @@ import Link from "next/link";
 import React from "react";
 import ModeToggle from "./mode-toggle";
 import Menu from "./menu";
+import CategoryDrawer from "./category-drawer";
 
 const Header = () => {
   return (
     <header className="w-full border-b shadow-md">
       <div className="wrapper flex-between">
         <div className="flex-start">
+          <div className="mr-4">
+            <CategoryDrawer />
+          </div>
+
           <Link href="/" className="flex-start">
             <Image
               src="/images/logo.svg"

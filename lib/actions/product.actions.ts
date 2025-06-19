@@ -18,10 +18,19 @@ export async function getLatestProducts() {
   return convertToPlainObject(data);
 }
 
-// get single product by slug
-
+// Get single product by it's slug
 export async function getProductBySlug(slug: string) {
-  const data = await prisma.product.findFirst({ where: { slug: slug } });
+  return await prisma.product.findFirst({
+    where: { slug: slug },
+  });
+}
+
+// Get single product by it's ID
+export async function getProductById(productId: string) {
+  const data = await prisma.product.findFirst({
+    where: { id: productId },
+  });
+
   return convertToPlainObject(data);
 }
 
@@ -168,4 +177,25 @@ export async function updateProduct(data: z.infer<typeof updateProductSchema>) {
   } catch (error) {
     return { success: false, message: formatError(error) };
   }
+}
+
+// Get all categories
+export async function getAllCategories() {
+  const data = await prisma.product.groupBy({
+    by: ["category"],
+    _count: true,
+  });
+
+  return data;
+}
+
+//get featured products
+export async function getFeaturedProducts() {
+  const data = await prisma.product.findMany({
+    where: { isFeatured: true },
+    orderBy: { createdAt: "desc" },
+    take: 4,
+  });
+
+  return convertToPlainObject(data);
 }
