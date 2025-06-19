@@ -53,6 +53,7 @@ export async function getAllProducts({
   sort?: string;
 }) {
   // Query filter
+  //prisma also creates types when we generateclient productWhereInput is one of those
   const queryFilter: Prisma.ProductWhereInput =
     query && query !== "all"
       ? {
