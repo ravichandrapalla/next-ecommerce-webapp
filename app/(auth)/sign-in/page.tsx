@@ -16,13 +16,16 @@ export const metadata: Metadata = {
   title: "Sign-in",
 };
 
-const SignInPage = async (props: {
-  searchParams: Promise<{ callbackUrl: string }>;
+const SignInPage = async ({
+  searchParams,
+}: {
+  searchParams?: { callbackUrl?: string };
 }) => {
-  const { callbackUrl } = await props.searchParams;
+  const callbackUrl = searchParams?.callbackUrl ?? "/";
   const session = await auth();
 
   if (session) {
+    console.log("session is there ", session);
     return redirect(callbackUrl || "/");
   }
   return (
