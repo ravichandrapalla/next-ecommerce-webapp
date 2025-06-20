@@ -5,6 +5,7 @@ import { compare } from "bcrypt-ts-edge";
 import type { NextAuthConfig } from "next-auth";
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { authConfig } from "./auth.config";
 
 export const config = {
   pages: {
@@ -12,7 +13,7 @@ export const config = {
     error: "/sign-in",
   },
   session: {
-    strategy: "jwt",
+    strategy: "jwt" as const,
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   providers: [
@@ -28,44 +29,40 @@ export const config = {
           return null;
         }
 
-        try {
-          // Find user in database
-          const user = await prisma.user.findFirst({
-            where: { email: credentials.email as string },
-          });
+        // Find user in database
+        const user = await prisma.user.findFirst({
+          where: { email: credentials.email as string },
+        });
 
-          if (!user || !user.password) {
-            return null;
-          }
-
-          // Check password
-          const isMatch = await compare(
-            credentials.password as string,
-            user.password
-          );
-
-          if (isMatch) {
-            return {
-              id: user.id,
-              name: user.name,
-              email: user.email,
-              role: user.role,
-            };
-          }
-
-          return null;
-        } catch (error) {
+        if (!user || !user.password) {
           return null;
         }
+
+        // Check password
+        const isMatch = await compare(
+          credentials.password as string,
+          user.password
+        );
+
+        if (isMatch) {
+          return {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+          };
+        }
+
+        return null;
       },
     }),
   ],
   callbacks: {
-    // Make JWT callback async
+    ...authConfig.callbacks,
+    // Make JWT callback
     async jwt({ token, user, trigger, session }: any) {
       // Initial sign in - add user data to token
       if (user) {
-        token.role = user.role;
         token.id = user.id;
         // here we make namein email as user name if no name is provided
         token.role = user.role;
@@ -121,61 +118,23 @@ export const config = {
 
       return session;
     },
-    authorized({ request, auth }: any) {
-      //array of path patterns to protect using test method
-      const protectedPaths = [
-        /\/shipping-address/,
-        /\/payment-method/,
-        /\/place-order/,
-        /\/profile/,
-        /\/user\/(.*)/,
-        /\/order\/(.*)/,
-        /\/admin/,
-      ];
-      //get path name from req URL object
-      const { pathname } = request.nextUrl;
-
-      //check if user is not authenticated and accessing a protected route
-      if (!auth && protectedPaths.some((p) => p.test(pathname))) {
-        return false;
-      }
-
-      const sessionCartIdCookie = request.cookies.get("sessionCartId");
-
-      if (!sessionCartIdCookie) {
-        const sessionCartId = crypto.randomUUID();
-
-        const newRequestHeaders = new Headers(request.headers);
-        const response = NextResponse.next({
-          request: {
-            headers: newRequestHeaders,
-          },
-        });
-
-        response.cookies.set("sessionCartId", sessionCartId);
-
-        return response; // ✅ Return the modified response
-      }
-
-      return true; // ✅ Allow access normally
-    },
   },
-  debug: process.env.NODE_ENV === "development",
-  trustHost: true,
-  cookies: {
-    sessionToken: {
-      name:
-        process.env.NODE_ENV === "production"
-          ? `__Secure-authjs.session-token`
-          : `authjs.session-token`,
-      options: {
-        httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-        secure: process.env.NODE_ENV === "production",
-      },
-    },
-  },
+  // debug: process.env.NODE_ENV === "development",
+  // trustHost: true,
+  // cookies: {
+  //   sessionToken: {
+  //     name:
+  //       process.env.NODE_ENV === "production"
+  //         ? `__Secure-authjs.session-token`
+  //         : `authjs.session-token`,
+  //     options: {
+  //       httpOnly: true,
+  //       sameSite: "lax",
+  //       path: "/",
+  //       secure: process.env.NODE_ENV === "production",
+  //     },
+  //   },
+  // },
 } satisfies NextAuthConfig;
 
 export const { handlers, signIn, signOut, auth } = NextAuth(config);
