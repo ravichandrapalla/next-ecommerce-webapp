@@ -136,7 +136,6 @@ const OrderDetailsTable = ({
       </Button>
     );
   };
-  console.log("aahh__> ", isAdmin, isPaid, paymentMethod);
 
   return (
     <>
