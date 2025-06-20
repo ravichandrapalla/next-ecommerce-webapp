@@ -22,7 +22,7 @@ const SignInPage = async (props: {
   const { callbackUrl } = await props.searchParams;
   const session = await auth();
 
-  if (session) {
+  if (session?.user?.email) {
     return redirect(callbackUrl || "/");
   }
   return (
