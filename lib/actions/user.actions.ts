@@ -18,6 +18,7 @@ import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { Prisma } from "../generated/prisma";
 import { PAGE_SIZE } from "../constants";
+import { getMyCart } from "./cart.actions";
 
 // Sign in user with credentials
 export async function signInWithCredentials(
@@ -30,35 +31,28 @@ export async function signInWithCredentials(
       password: formData.get("password"),
     });
 
-    const result = await signIn("credentials", {
-      email: user.email,
-      password: user.password,
-    });
+    const result = await signIn("credentials", user);
 
     // If we get here without error, sign-in was successful
     return { success: true, message: "Signed in successfully" };
   } catch (error) {
-    console.error("💥 Sign-in error:", error);
-
     if (isRedirectError(error)) {
       throw error; // Re-throw redirect errors
     }
 
-    if (error instanceof AuthError) {
-      switch (error.type) {
-        case "CredentialsSignin":
-          return { success: false, message: "Invalid email or password" };
-        default:
-          return { success: false, message: "Authentication failed" };
-      }
-    }
-
-    return { success: false, message: "An unexpected error occurred" };
+    return { success: false, message: "Invalid email or password" };
   }
 }
 
 export async function signOutUser() {
-  await signOut({ redirectTo: "/sign-in" });
+  const currentCart = await getMyCart();
+
+  if (currentCart?.id) {
+    await prisma.cart.delete({ where: { id: currentCart.id } });
+  } else {
+    console.warn("No cart found for deletion.");
+  }
+  await signOut();
 }
 
 //Signup user

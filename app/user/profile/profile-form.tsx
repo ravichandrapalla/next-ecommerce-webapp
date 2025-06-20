@@ -8,12 +8,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
+
 import { updateProfile } from "@/lib/actions/user.actions";
 import { updateProfileSchema } from "@/lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 const ProfileForm = () => {
@@ -27,16 +28,11 @@ const ProfileForm = () => {
     },
   });
 
-  const { toast } = useToast();
-
   const onSubmit = async (values: z.infer<typeof updateProfileSchema>) => {
     const res = await updateProfile(values);
 
     if (!res.success) {
-      return toast({
-        variant: "destructive",
-        description: res.message,
-      });
+      toast.error(res.message);
     }
 
     const newSession = {
@@ -48,10 +44,7 @@ const ProfileForm = () => {
     };
 
     await update(newSession);
-
-    toast({
-      description: res.message,
-    });
+    toast.success(res.message);
   };
 
   return (

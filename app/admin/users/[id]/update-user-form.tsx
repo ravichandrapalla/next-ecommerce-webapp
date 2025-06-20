@@ -17,13 +17,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useToast } from "@/hooks/use-toast";
+
 import { updateUser } from "@/lib/actions/user.actions";
 import { USER_ROLES } from "@/lib/constants";
 import { updateUserSchema } from "@/lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { ControllerRenderProps, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 const UpdateUserForm = ({
@@ -32,7 +33,6 @@ const UpdateUserForm = ({
   user: z.infer<typeof updateUserSchema>;
 }) => {
   const router = useRouter();
-  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof updateUserSchema>>({
     resolver: zodResolver(updateUserSchema),
@@ -47,22 +47,14 @@ const UpdateUserForm = ({
       });
 
       if (!res.success) {
-        return toast({
-          variant: "destructive",
-          description: res.message,
-        });
+        toast.error(res.message);
       }
 
-      toast({
-        description: res.message,
-      });
+      toast.success(res.message);
       form.reset();
       router.push("/admin/users");
     } catch (error) {
-      toast({
-        variant: "destructive",
-        description: (error as Error).message,
-      });
+      toast.error((error as Error).message);
     }
   };
 

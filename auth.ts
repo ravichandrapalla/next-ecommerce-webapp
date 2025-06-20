@@ -3,7 +3,6 @@ import { prisma } from "@/db/prisma";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { compare } from "bcrypt-ts-edge";
 import type { NextAuthConfig } from "next-auth";
-import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { authConfig } from "./auth.config";
 
